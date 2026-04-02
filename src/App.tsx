@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ContactCard } from './ContactCard';
+import { readFavoriteIds, writeFavoriteIds } from './favoriteIdsStorage';
 import { useDebouncedValue } from './useDebouncedValue';
 
 interface Address {
@@ -21,11 +22,22 @@ async function fetchUsers(): Promise<User[]> {
   return res.json() as Promise<User[]>;
 }
 
+function sortFavoritesFirst(users: User[], favoriteIds: Set<number>): User[] {
+  const fav: User[] = [];
+  const rest: User[] = [];
+  for (const u of users) {
+    if (favoriteIds.has(u.id)) fav.push(u);
+    else rest.push(u);
+  }
+  return [...fav, ...rest];
+}
+
 export default function App() {
   const [users, setUsers] = useState<User[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebouncedValue(search);
+  const [favoriteIds, setFavoriteIds] = useState(readFavoriteIds);
 
   useEffect(() => {
     let isCancelled = false;
@@ -41,12 +53,27 @@ export default function App() {
     };
   }, []);
 
+  const toggleFavorite = useCallback((id: number) => {
+    setFavoriteIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      writeFavoriteIds(next);
+      return next;
+    });
+  }, []);
+
   const filteredUsers = useMemo(() => {
     if (!users) return null;
     const q = debouncedSearch.trim().toLowerCase();
     if (!q) return users;
     return users.filter((u) => u.name.toLowerCase().includes(q));
   }, [users, debouncedSearch]);
+
+  const displayUsers = useMemo(() => {
+    if (!filteredUsers) return null;
+    return sortFavoritesFirst(filteredUsers, favoriteIds);
+  }, [filteredUsers, favoriteIds]);
 
   const isLoading = users === null && !error;
   const showEmpty =
@@ -108,12 +135,14 @@ export default function App() {
               </p>
             ) : (
               <ul className="grid gap-3 sm:grid-cols-2">
-                {(filteredUsers ?? []).map((u) => (
+                {(displayUsers ?? []).map((u) => (
                   <li key={u.id}>
                     <ContactCard
                       name={u.name}
                       email={u.email}
                       city={u.address.city}
+                      isFavorite={favoriteIds.has(u.id)}
+                      onToggleFavorite={() => toggleFavorite(u.id)}
                     />
                   </li>
                 ))}

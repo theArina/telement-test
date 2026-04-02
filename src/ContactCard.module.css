@@ -1,10 +1,14 @@
 .card {
-  display: flex;
-  gap: 0.75rem;
-  align-items: flex-start;
+  position: relative;
   border: 1px solid rgb(229 231 235);
   border-radius: 0.5rem;
   background: rgb(255 255 255);
+}
+
+.row {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
 }
 
 .avatar {
@@ -23,11 +27,59 @@
 
 .body {
   min-width: 0;
+  flex: 1;
+}
+
+.star {
+  flex-shrink: 0;
+  margin: -0.25rem -0.25rem 0 0;
+  padding: 0.25rem;
+  border: none;
+  border-radius: 0.375rem;
+  background: transparent;
+  color: rgb(163 163 163);
+  cursor: pointer;
+  line-height: 0;
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.star:hover {
+  color: rgb(234 179 8);
+  background: rgb(254 252 232 / 0.8);
+}
+
+.starActive {
+  color: rgb(234 179 8);
+}
+
+.star:active {
+  transform: scale(0.92);
+}
+
+.star:focus-visible {
+  outline: 2px solid rgb(59 130 246);
+  outline-offset: 2px;
 }
 
 @media (prefers-color-scheme: dark) {
   .card {
     border-color: rgb(55 65 81);
     background: rgb(17 24 39);
+  }
+
+  .star {
+    color: rgb(115 115 115);
+  }
+
+  .star:hover {
+    color: rgb(250 204 21);
+    background: rgb(66 32 6 / 0.4);
+  }
+
+  .starActive {
+    color: rgb(250 204 21);
   }
 }
