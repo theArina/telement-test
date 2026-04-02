@@ -1,0 +1,12 @@
+.card {
+  border: 1px solid rgb(229 231 235);
+  border-radius: 0.5rem;
+  background: rgb(255 255 255);
+}
+
+@media (prefers-color-scheme: dark) {
+  .card {
+    border-color: rgb(55 65 81);
+    background: rgb(17 24 39);
+  }
+}
