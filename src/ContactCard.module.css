@@ -1,8 +1,16 @@
 .card {
   position: relative;
   border: 1px solid rgb(229 231 235);
-  border-radius: 0.5rem;
+  border-radius: 12px;
   background: rgb(255 255 255);
+  transition:
+    border-color 0.45s ease,
+    box-shadow 0.45s ease;
+}
+
+.cardFavorite {
+  border-color: rgb(234 179 8 / 0.42);
+  box-shadow: 0 0 0 1px rgb(234 179 8 / 0.12);
 }
 
 .row {
@@ -41,9 +49,9 @@
   cursor: pointer;
   line-height: 0;
   transition:
-    color 0.15s ease,
-    background-color 0.15s ease,
-    transform 0.15s ease;
+    color 0.28s ease,
+    background-color 0.28s ease,
+    transform 0.2s ease;
 }
 
 .star:hover {
@@ -68,6 +76,11 @@
   .card {
     border-color: rgb(55 65 81);
     background: rgb(17 24 39);
+  }
+
+  .cardFavorite {
+    border-color: rgb(250 204 21 / 0.45);
+    box-shadow: 0 0 0 1px rgb(250 204 21 / 0.15);
   }
 
   .star {

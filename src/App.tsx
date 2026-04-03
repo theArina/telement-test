@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { flushSync } from 'react-dom';
 import { ContactCard } from './ContactCard';
 import { readFavoriteIds, writeFavoriteIds } from './favoriteIdsStorage';
 import { useDebouncedValue } from './useDebouncedValue';
@@ -54,13 +55,26 @@ export default function App() {
   }, []);
 
   const toggleFavorite = useCallback((id: number) => {
-    setFavoriteIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      writeFavoriteIds(next);
-      return next;
-    });
+    const update = () => {
+      setFavoriteIds((prev) => {
+        const next = new Set(prev);
+        if (next.has(id)) next.delete(id);
+        else next.add(id);
+        writeFavoriteIds(next);
+        return next;
+      });
+    };
+
+    if (
+      typeof document !== 'undefined' &&
+      typeof document.startViewTransition === 'function'
+    ) {
+      document.startViewTransition(() => {
+        flushSync(update);
+      });
+    } else {
+      update();
+    }
   }, []);
 
   const filteredUsers = useMemo(() => {
@@ -136,7 +150,12 @@ export default function App() {
             ) : (
               <ul className="grid gap-3 sm:grid-cols-2">
                 {(displayUsers ?? []).map((u) => (
-                  <li key={u.id}>
+                  <li
+                    key={u.id}
+                    style={{
+                      viewTransitionName: `contact-${u.id}`,
+                    }}
+                  >
                     <ContactCard
                       name={u.name}
                       email={u.email}

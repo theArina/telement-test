@@ -34,7 +34,9 @@ export function ContactCard({
   const bg = stableColorFromName(name);
 
   return (
-    <article className={`${styles.card} p-4`}>
+    <article
+      className={`${styles.card} p-4 ${isFavorite ? styles.cardFavorite : ''}`}
+    >
       <div className={styles.row}>
         <div
           className={styles.avatar}
