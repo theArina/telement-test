@@ -1,7 +1,10 @@
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import * as favoriteIdsStorage from '../lib/favoriteIdsStorage.ts';
 import App from './App.tsx';
+
+const STORAGE_KEY = 'telement:favorite-contact-ids';
 
 const mockUsers = [
   { id: 1, name: 'Alpha One', email: 'a@b.com', address: { city: 'X' } },
@@ -87,5 +90,50 @@ describe('App', () => {
       },
       { timeout: 800 },
     );
+  });
+
+  it('calls writeFavoriteIds and stores JSON in localStorage when adding favorite', async () => {
+    const writeSpy = vi.spyOn(favoriteIdsStorage, 'writeFavoriteIds');
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: true,
+      json: async () => mockUsers,
+    } as Response);
+
+    const user = userEvent.setup();
+    render(<App />);
+
+    await screen.findByText('Beta Two');
+
+    await user.click(
+      screen.getByRole('button', { name: /add beta two to favorites/i }),
+    );
+
+    expect(writeSpy).toHaveBeenCalled();
+    const arg = writeSpy.mock.calls[
+      writeSpy.mock.calls.length - 1
+    ][0] as Set<number>;
+    expect([...arg].sort((a, b) => a - b)).toEqual([2]);
+
+    expect(localStorage.getItem(STORAGE_KEY)).toBe(JSON.stringify([2]));
+  });
+
+  it('updates localStorage when removing favorite', async () => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify([2]));
+
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: true,
+      json: async () => mockUsers,
+    } as Response);
+
+    const user = userEvent.setup();
+    render(<App />);
+
+    await screen.findByText('Beta Two');
+
+    await user.click(
+      screen.getByRole('button', { name: /remove beta two from favorites/i }),
+    );
+
+    expect(localStorage.getItem(STORAGE_KEY)).toBe(JSON.stringify([]));
   });
 });
