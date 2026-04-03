@@ -1,5 +1,9 @@
 .card {
   position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   border: 1px solid rgb(229 231 235);
   border-radius: 12px;
   background: rgb(255 255 255);
@@ -17,6 +21,7 @@
   display: flex;
   gap: 0.75rem;
   align-items: flex-start;
+  min-width: 0;
 }
 
 .avatar {
@@ -36,6 +41,11 @@
 .body {
   min-width: 0;
   flex: 1;
+  overflow-wrap: anywhere;
+}
+
+.body h2 {
+  overflow-wrap: anywhere;
 }
 
 .star {

@@ -113,8 +113,8 @@ export default function App() {
     filteredUsers.length === 0;
 
   return (
-    <div className="min-h-dvh bg-neutral-50 px-4 py-8 dark:bg-neutral-950">
-      <div className="mx-auto max-w-3xl">
+    <div className="min-h-dvh min-w-0 overflow-x-hidden bg-neutral-50 px-4 py-8 dark:bg-neutral-950">
+      <div className="mx-auto min-w-0 max-w-3xl">
         <h1 className="mb-6 text-xl font-semibold text-neutral-900 dark:text-neutral-100">
           Contacts
         </h1>
@@ -164,10 +164,11 @@ export default function App() {
                 Nothing found
               </p>
             ) : (
-              <ul className="grid gap-3 sm:grid-cols-2">
+              <ul className="grid min-w-0 gap-3 sm:grid-cols-2">
                 {(displayUsers ?? []).map((u) => (
                   <li
                     key={u.id}
+                    className="min-w-0"
                     style={{
                       viewTransitionName: `contact-${u.id}`,
                     }}
