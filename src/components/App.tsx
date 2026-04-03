@@ -19,6 +19,8 @@ interface User {
 }
 
 const USERS_URL = 'https://jsonplaceholder.typicode.com/users';
+/** Avoid a sub-100ms loading flash when the network is very fast. */
+const MIN_LOADING_MS = 350;
 
 async function fetchUsers(): Promise<User[]> {
   const res = await fetch(USERS_URL);
@@ -45,15 +47,26 @@ export default function App() {
 
   useEffect(() => {
     let isCancelled = false;
+    let showDataTimeoutId: ReturnType<typeof setTimeout> | undefined;
+    const loadStartedAt = Date.now();
+
     fetchUsers()
       .then((data) => {
-        if (!isCancelled) setUsers(data);
+        const elapsed = Date.now() - loadStartedAt;
+        const remaining = Math.max(0, MIN_LOADING_MS - elapsed);
+        showDataTimeoutId = window.setTimeout(() => {
+          if (!isCancelled) setUsers(data);
+        }, remaining);
       })
       .catch(() => {
         if (!isCancelled) setError('Failed to load contacts.');
       });
+
     return () => {
       isCancelled = true;
+      if (showDataTimeoutId !== undefined) {
+        clearTimeout(showDataTimeoutId);
+      }
     };
   }, []);
 
