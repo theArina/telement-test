@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getInitials, stableColorFromName } from './nameAvatar';
+import { getInitials, stableColorFromName } from './nameAvatar.ts';
 
 describe('getInitials', () => {
   it('returns two letters from first and last word', () => {

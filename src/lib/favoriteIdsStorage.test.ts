@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { readFavoriteIds, writeFavoriteIds } from './favoriteIdsStorage';
+import { readFavoriteIds, writeFavoriteIds } from './favoriteIdsStorage.ts';
 
 beforeEach(() => {
   localStorage.clear();

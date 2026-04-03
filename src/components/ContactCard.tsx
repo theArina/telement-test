@@ -1,4 +1,4 @@
-import { getInitials, stableColorFromName } from './nameAvatar';
+import { getInitials, stableColorFromName } from '../lib/nameAvatar.ts';
 import styles from './ContactCard.module.css';
 
 export interface ContactCardProps {

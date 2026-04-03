@@ -1,8 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { flushSync } from 'react-dom';
-import { ContactCard } from './ContactCard';
-import { readFavoriteIds, writeFavoriteIds } from './favoriteIdsStorage';
-import { useDebouncedValue } from './useDebouncedValue';
+import { ContactCard } from './ContactCard.tsx';
+import {
+  readFavoriteIds,
+  writeFavoriteIds,
+} from '../lib/favoriteIdsStorage.ts';
+import { useDebouncedValue } from '../hooks/useDebouncedValue.ts';
 
 interface Address {
   city: string;

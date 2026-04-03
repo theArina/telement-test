@@ -1,7 +1,7 @@
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import App from './App';
+import App from './App.tsx';
 
 const mockUsers = [
   { id: 1, name: 'Alpha One', email: 'a@b.com', address: { city: 'X' } },
