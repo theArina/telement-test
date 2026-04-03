@@ -1,5 +1,10 @@
 @import 'tailwindcss';
 
+/* Reserve space for the vertical scrollbar so layout width does not jump. */
+html {
+  scrollbar-gutter: stable;
+}
+
 body {
   margin: 0;
 }
